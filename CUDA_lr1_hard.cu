@@ -1,4 +1,4 @@
-﻿#include "cuda_runtime.h"
+#include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,8 +7,9 @@ __global__ void Dispersion(float *a, int* m, float* dispersion) {
 	float MX = 0;
 	// Мат ожидание от X^2
 	float MX_2 = 0;
+	int idx = blockDim.x * blockIdx.x + threadIdx.x;
 	// Перебираем массив, находя мат ожидания
-	for (int j = 0; j < *m; j++)
+	for (int j = 0; j <= idx; j++)
 	{
 		MX += a[0 * *m + j] * a[1 * *m + j];
 		MX_2 += a[0 * *m + j]* a[0 * *m + j] * a[1 * *m + j];
@@ -44,7 +45,7 @@ int main(void) {
 	cudaMemcpy(dev_m, &m, sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy(dev_dispersion, &dispersion, sizeof(float), cudaMemcpyHostToDevice);
 	// запускаем Dispersion() на GPU, передавая параметры
-	Dispersion << < 1, 1 >> > (dev_a, dev_m, dev_dispersion);
+	Dispersion << < m, 1 >> > (dev_a, dev_m, dev_dispersion);
 	// копируем результат функции обратно
 	cudaMemcpy(&dispersion, dev_dispersion, sizeof(float), cudaMemcpyDeviceToHost);
 	// освобождаем память
