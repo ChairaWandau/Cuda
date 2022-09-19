@@ -4,13 +4,14 @@
 
 __global__ void Palindrom(int* a, int* arr, int count) {
 	int m = 0;
+	int idx = blockDim.x * blockIdx.x + threadIdx.x;
 	while (*a > 0)
 	{
 		m = m * 10 + *a % 10;
 		*a = *a / 10;
 	}
 	*a = m;
-	for (int i = count-1; i >= 0; i--) {
+	for (int i = idx-1; i >= 0; i--) {
 		arr[i] = *a % 10;
 		*a /= 10;
 	}
