@@ -42,7 +42,7 @@ int main(void) {
 		int* dev_arr;
 		cudaMalloc((void**)&dev_arr, count*sizeof(int));
 		// запускаем Palindrom() на GPU, передавая параметры
-		Palindrom <<< count, 2 >>> (dev_a, dev_arr, count);
+		Palindrom <<< 8, 8 >>> (dev_a, dev_arr, count);
 		cudaMemcpy(arr, dev_arr, sizeof(int) * count, cudaMemcpyDeviceToHost);
 		//Превращаем массив в число
 		a=0;
