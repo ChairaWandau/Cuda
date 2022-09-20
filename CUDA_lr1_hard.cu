@@ -45,7 +45,7 @@ int main(void) {
 	cudaMemcpy(dev_m, &m, sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy(dev_dispersion, &dispersion, sizeof(float), cudaMemcpyHostToDevice);
 	// запускаем Dispersion() на GPU, передавая параметры
-	Dispersion << < m, 1 >> > (dev_a, dev_m, dev_dispersion);
+	Dispersion << < m, m >> > (dev_a, dev_m, dev_dispersion);
 	// копируем результат функции обратно
 	cudaMemcpy(&dispersion, dev_dispersion, sizeof(float), cudaMemcpyDeviceToHost);
 	// освобождаем память
